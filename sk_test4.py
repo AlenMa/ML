@@ -41,6 +41,7 @@ from sklearn.metrics import f1_score
 
 data = pd.read_csv('data/train_org1.csv')
 predata=pd.read_csv('data/test_org1.csv')
+predtaget=pd.read_csv('data/jieguo.csv')
 
 df = data.copy()
 target = 'Default'
@@ -98,6 +99,7 @@ predictors = df.columns.drop(['ID', target])
 X = np.asarray(df[predictors])
 y = np.asarray(df[target])
 predX=np.asarray(predata[predictors])
+predY=np.asarray(predtaget[target][:])
 
 data=X[:300,:].transpose()
 R = corrcoef(data)
@@ -108,12 +110,12 @@ xticks(arange(0,21),range(0,22))
 show()
 X = X
 Y =y
-model = LogisticRegression()
-rfe = RFE(model, step=1)
-fit = rfe.fit(X, Y)
-print("Num Features:",fit.n_features_)
-print("Selected Features:",fit.support_)
-print("Feature Ranking: ",fit.ranking_)
+# model = LogisticRegression()
+# rfe = RFE(model, step=1)
+# fit = rfe.fit(X, Y)
+# print("Num Features:",fit.n_features_)
+# print("Selected Features:",fit.support_)
+# print("Feature Ranking: ",fit.ranking_)
 X=pd.DataFrame(X)
 predX=pd.DataFrame(predX)
 
@@ -168,7 +170,7 @@ X_pred=preprocessing.robust_scale(predX1, axis=0, with_centering=True, with_scal
 activations=['identity', 'logistic', 'tanh', 'relu']
 clf=MLPClassifier(activation='logistic', alpha=1e-05, batch_size='auto',
   beta_1=0.9, beta_2=0.999, early_stopping=False,
-  epsilon=1e-08, hidden_layer_sizes=(40,20,10,8,4), learning_rate='constant',
+  epsilon=1e-08, hidden_layer_sizes=(40,30,10,8,6), learning_rate='constant',
   learning_rate_init=0.001, max_iter=300, momentum=0.9,
   nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
   solver='adam', tol=0.001, validation_fraction=0.1, verbose=False,
@@ -181,38 +183,40 @@ print(classification_report(y_test,clf.predict(X_test)))
 from sklearn.metrics import f1_score
 print(f1_score(y_test,clf.predict(X_test)))
 pred_y=clf.predict(X_pred)
+
+print(f1_score(predY,pred_y))
 result=pd.DataFrame(pred_y)
 import datetime
 now = datetime.datetime.now()
 nowstr=now.strftime('%Y%m%d%H%M%S')  
-result.to_csv('try/result'+nowstr+'.csv')
+# result.to_csv('try/result'+nowstr+'.csv')
 print("ANN",accuracy)
 
-resultc=[]
-for i in range(10,20):
-  for j in range(5,16):
-    for a in range(4,10):
+# resultc=[]
+# for i in range(10,20):
+#   for j in range(5,16):
+#     for a in range(4,10):
 
-      clf=MLPClassifier(activation='logistic', alpha=1e-05, batch_size='auto',
-        beta_1=0.9, beta_2=0.999, early_stopping=False,
-        epsilon=1e-08, hidden_layer_sizes=(i,j,a), learning_rate='constant',
-        learning_rate_init=0.001, max_iter=300, momentum=0.9,
-        nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
-        solver='adam', tol=0.001, validation_fraction=0.1, verbose=False,
-        warm_start=False)
-      clf.fit(X_train,y_train)
-      accuracy=clf.score(X_test,y_test)
-      from sklearn.metrics import f1_score
-      f1=f1_score(y_test,clf.predict(X_test))
-      # print(classification_report(y_test,clf.predict(X_test)))
+#       clf=MLPClassifier(activation='logistic', alpha=1e-05, batch_size='auto',
+#         beta_1=0.9, beta_2=0.999, early_stopping=False,
+#         epsilon=1e-08, hidden_layer_sizes=(i,j,a), learning_rate='constant',
+#         learning_rate_init=0.001, max_iter=300, momentum=0.9,
+#         nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
+#         solver='adam', tol=0.001, validation_fraction=0.1, verbose=False,
+#         warm_start=False)
+#       clf.fit(X_train,y_train)
+#       accuracy=clf.score(X_test,y_test)
+#       from sklearn.metrics import f1_score
+#       f1=f1_score(y_test,clf.predict(X_test))
+#       # print(classification_report(y_test,clf.predict(X_test)))
 
-      # pred_y=clf.predict(X_pred)
-      # result=pd.DataFrame(pred_y)
-      # result.to_csv('try/result_mtsk2'+str(i)+str(j)+a+'.csv')
-      print(str(i)+' '+str(j)+' '+str(a)+' '+str(f1))
-      resultc.append((i,j,a,f1))
-      # print("ANN",accuracy)
+#       # pred_y=clf.predict(X_pred)
+#       # result=pd.DataFrame(pred_y)
+#       # result.to_csv('try/result_mtsk2'+str(i)+str(j)+a+'.csv')
+#       print(str(i)+' '+str(j)+' '+str(a)+' '+str(f1))
+#       resultc.append((i,j,a,f1))
+#       # print("ANN",accuracy)
 
 
-print(resultc)
+# print(resultc)
 

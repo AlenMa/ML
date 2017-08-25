@@ -39,8 +39,8 @@ from sklearn.metrics import f1_score
 
 
 
-data = pd.read_csv('data/train_org1.csv')
-predata=pd.read_csv('data/test_org1.csv')
+data = pd.read_csv('data/train_finish.csv')
+predata=pd.read_csv('data/test_finish.csv')
 
 df = data.copy()
 target = 'Default'
@@ -122,8 +122,8 @@ predX=pd.DataFrame(predX)
 # X1=X[[19,3,8,4,10,1,5,2,7,6,9,17]]
 # predX1=predX[[19,3,8,4,10,1,5,2,7,6,9,17]]
 
-X1=X[[1,2,3,4,5,6,7,8,9,10,17]]
-predX1=predX[[1,2,3,4,5,6,7,8,9,10,17]]
+X1=X[[0,1,2,3,4,5,12,19,20,21,22]]
+predX1=predX[[0,1,2,3,4,5,12,19,20,21,22]]
 
 X_train, X_test, y_train, y_test = train_test_split(X1, y, test_size=0.3, random_state=0, stratify=y)
 
@@ -168,14 +168,15 @@ X_pred=preprocessing.robust_scale(predX1, axis=0, with_centering=True, with_scal
 activations=['identity', 'logistic', 'tanh', 'relu']
 clf=MLPClassifier(activation='logistic', alpha=1e-05, batch_size='auto',
   beta_1=0.9, beta_2=0.999, early_stopping=False,
-  epsilon=1e-08, hidden_layer_sizes=(40,20,10,8,4), learning_rate='constant',
+  epsilon=1e-08, hidden_layer_sizes=(22,10,6), learning_rate='constant',
   learning_rate_init=0.001, max_iter=300, momentum=0.9,
   nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
   solver='adam', tol=0.001, validation_fraction=0.1, verbose=False,
   warm_start=False)
+print(X_train[0])
+print(y_train[0])
 
 clf.fit(X_train,y_train)
-print(X_train)
 accuracy=clf.score(X_test,y_test)
 print(classification_report(y_test,clf.predict(X_test)))
 from sklearn.metrics import f1_score
@@ -188,31 +189,30 @@ nowstr=now.strftime('%Y%m%d%H%M%S')
 result.to_csv('try/result'+nowstr+'.csv')
 print("ANN",accuracy)
 
-resultc=[]
-for i in range(10,20):
-  for j in range(5,16):
-    for a in range(4,10):
+# resultc=[]
+# for i in range(10,20):
+#   for j in range(5,16):
+#     for a in range(4,10):
 
-      clf=MLPClassifier(activation='logistic', alpha=1e-05, batch_size='auto',
-        beta_1=0.9, beta_2=0.999, early_stopping=False,
-        epsilon=1e-08, hidden_layer_sizes=(i,j,a), learning_rate='constant',
-        learning_rate_init=0.001, max_iter=300, momentum=0.9,
-        nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
-        solver='adam', tol=0.001, validation_fraction=0.1, verbose=False,
-        warm_start=False)
-      clf.fit(X_train,y_train)
-      accuracy=clf.score(X_test,y_test)
-      from sklearn.metrics import f1_score
-      f1=f1_score(y_test,clf.predict(X_test))
-      # print(classification_report(y_test,clf.predict(X_test)))
+#       clf=MLPClassifier(activation='logistic', alpha=1e-05, batch_size='auto',
+#         beta_1=0.9, beta_2=0.999, early_stopping=False,
+#         epsilon=1e-08, hidden_layer_sizes=(i,j,a), learning_rate='constant',
+#         learning_rate_init=0.001, max_iter=300, momentum=0.9,
+#         nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
+#         solver='adam', tol=0.001, validation_fraction=0.1, verbose=False,
+#         warm_start=False)
+#       clf.fit(X_train,y_train)
+#       accuracy=clf.score(X_test,y_test)
+#       from sklearn.metrics import f1_score
+#       f1=f1_score(y_test,clf.predict(X_test))
+#       print(classification_report(y_test,clf.predict(X_test)))
 
-      # pred_y=clf.predict(X_pred)
-      # result=pd.DataFrame(pred_y)
-      # result.to_csv('try/result_mtsk2'+str(i)+str(j)+a+'.csv')
-      print(str(i)+' '+str(j)+' '+str(a)+' '+str(f1))
-      resultc.append((i,j,a,f1))
-      # print("ANN",accuracy)
+#       # pred_y=clf.predict(X_pred)
+#       # result=pd.DataFrame(pred_y)
+#       # result.to_csv('try/result_mtsk2'+str(i)+str(j)+a+'.csv')
+#       resultc.append((i,j,a,f1))
+#       print("ANN",accuracy)
 
 
-print(resultc)
+# print(resultc)
 

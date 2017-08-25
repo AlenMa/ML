@@ -122,8 +122,8 @@ predX=pd.DataFrame(predX)
 # X1=X[[19,3,8,4,10,1,5,2,7,6,9,17]]
 # predX1=predX[[19,3,8,4,10,1,5,2,7,6,9,17]]
 
-X1=X[[1,2,3,4,5,6,7,8,9,10,17]]
-predX1=predX[[1,2,3,4,5,6,7,8,9,10,17]]
+X1=X[[1,2,3,4,5,6,7,8,9,10]]
+predX1=predX[[1,2,3,4,5,6,7,8,9,10]]
 
 X_train, X_test, y_train, y_test = train_test_split(X1, y, test_size=0.3, random_state=0, stratify=y)
 
@@ -168,7 +168,7 @@ X_pred=preprocessing.robust_scale(predX1, axis=0, with_centering=True, with_scal
 activations=['identity', 'logistic', 'tanh', 'relu']
 clf=MLPClassifier(activation='logistic', alpha=1e-05, batch_size='auto',
   beta_1=0.9, beta_2=0.999, early_stopping=False,
-  epsilon=1e-08, hidden_layer_sizes=(40,20,10,8,4), learning_rate='constant',
+  epsilon=1e-08, hidden_layer_sizes=(10,7,4), learning_rate='constant',
   learning_rate_init=0.001, max_iter=300, momentum=0.9,
   nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
   solver='adam', tol=0.001, validation_fraction=0.1, verbose=False,
@@ -178,41 +178,29 @@ clf.fit(X_train,y_train)
 print(X_train)
 accuracy=clf.score(X_test,y_test)
 print(classification_report(y_test,clf.predict(X_test)))
-from sklearn.metrics import f1_score
-print(f1_score(y_test,clf.predict(X_test)))
 pred_y=clf.predict(X_pred)
 result=pd.DataFrame(pred_y)
-import datetime
-now = datetime.datetime.now()
-nowstr=now.strftime('%Y%m%d%H%M%S')  
-result.to_csv('try/result'+nowstr+'.csv')
+result.to_csv('try/result_mtsk3.csv')
 print("ANN",accuracy)
 
-resultc=[]
-for i in range(10,20):
-  for j in range(5,16):
-    for a in range(4,10):
+# for i in range(5,50):
+#   for j in range(2,50):
+#     for a in activations:
 
-      clf=MLPClassifier(activation='logistic', alpha=1e-05, batch_size='auto',
-        beta_1=0.9, beta_2=0.999, early_stopping=False,
-        epsilon=1e-08, hidden_layer_sizes=(i,j,a), learning_rate='constant',
-        learning_rate_init=0.001, max_iter=300, momentum=0.9,
-        nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
-        solver='adam', tol=0.001, validation_fraction=0.1, verbose=False,
-        warm_start=False)
-      clf.fit(X_train,y_train)
-      accuracy=clf.score(X_test,y_test)
-      from sklearn.metrics import f1_score
-      f1=f1_score(y_test,clf.predict(X_test))
-      # print(classification_report(y_test,clf.predict(X_test)))
-
-      # pred_y=clf.predict(X_pred)
-      # result=pd.DataFrame(pred_y)
-      # result.to_csv('try/result_mtsk2'+str(i)+str(j)+a+'.csv')
-      print(str(i)+' '+str(j)+' '+str(a)+' '+str(f1))
-      resultc.append((i,j,a,f1))
-      # print("ANN",accuracy)
-
-
-print(resultc)
+#       clf=MLPClassifier(activation=a, alpha=1e-05, batch_size='auto',
+#         beta_1=0.9, beta_2=0.999, early_stopping=False,
+#         epsilon=1e-08, hidden_layer_sizes=(i,j), learning_rate='constant',
+#         learning_rate_init=0.001, max_iter=300, momentum=0.9,
+#         nesterovs_momentum=True, power_t=0.5, random_state=1, shuffle=True,
+#         solver='adam', tol=0.001, validation_fraction=0.1, verbose=False,
+#         warm_start=False)
+#       clf.fit(X_train,y_train)
+#       print(X_train)
+#       accuracy=clf.score(X_test,y_test)
+#       print(str(i)+str(j)+a)
+#       print(classification_report(y_test,clf.predict(X_test)))
+#       pred_y=clf.predict(X_pred)
+#       result=pd.DataFrame(pred_y)
+#       result.to_csv('try/result_mtsk2'+str(i)+str(j)+a+'.csv')
+#       print("ANN",accuracy)
 
